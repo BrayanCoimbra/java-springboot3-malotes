@@ -30,10 +30,8 @@ build/
 !**/src/test/**/build/
 
 # Spring Boot - arquivos locais
-application.properties
-application.yml
-application-dev.properties
-application-dev.yml
+*.properties
+*.yml
 
 # Logs
 *.log

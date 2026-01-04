@@ -2,6 +2,8 @@ package br.com.malotes.repository;
 
 import br.com.malotes.dto.ConsultaMaloteDTO;
 import br.com.malotes.domain.Malote;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +24,7 @@ public interface MaloteRepository extends JpaRepository<Malote, Long> {
             JOIN m.funcionario f
             JOIN m.descricao d
             """)
-    List<ConsultaMaloteDTO> listarConsultaMalotes();
+    Page<ConsultaMaloteDTO> listarConsultaMalotes(Pageable pageable);
 
     @Query("""
             SELECT new br.com.malotes.dto.ConsultaMaloteDTO(
@@ -39,5 +41,9 @@ public interface MaloteRepository extends JpaRepository<Malote, Long> {
               AND (:dataEnvio IS NULL OR m.dataEnvio = :dataEnvio)
               AND (:descricao IS NULL OR LOWER(d.descricao) LIKE LOWER(CONCAT('%', :descricao, '%')))
         """)
-    List<ConsultaMaloteDTO> filtrarConsultaMalotes(@Param("matricula") Integer matricula, @Param("dataEnvio") LocalDate dataEnvio, @Param("descricao") String desricao);
+    Page<ConsultaMaloteDTO> filtrarConsultaMalotes(
+            @Param("matricula") Integer matricula,
+            @Param("dataEnvio") LocalDate dataEnvio,
+            @Param("descricao") String desricao, 
+            Pageable pageable);
 }
