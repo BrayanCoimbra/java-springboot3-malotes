@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "SUPFUNCIONARIO")
-public class funcionario {
+public class Funcionario {
     @Id
     @Column(name = "SEQCODFUNCIONARIO")
     private Long id;

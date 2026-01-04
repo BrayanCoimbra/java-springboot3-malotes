@@ -5,7 +5,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "SUPMALOTE")
-public class malote {
+public class Malote {
 
     @Id
     @Column(name = "SEQCODMALOTE")
@@ -13,7 +13,7 @@ public class malote {
 
     @ManyToOne
     @JoinColumn(name = "CODFUNCIONARIO", nullable = false)
-    private funcionario funcionario;
+    private Funcionario funcionario;
 
     @Column(name = "DTENVIO", nullable = false)
     private LocalDate dataEnvio;
@@ -26,14 +26,14 @@ public class malote {
 
     @ManyToOne
     @JoinColumn(name = "CODDESCRICAO", nullable = false)
-    private descricao descricao;
+    private Descricao descricao;
 
     // Getters and Setters
     public Long getId() {
         return id;
     }
 
-    public funcionario getFuncionario() {
+    public Funcionario getFuncionario() {
         return funcionario;
     }
 
@@ -49,7 +49,7 @@ public class malote {
         return situacaoMalote;
     }
 
-    public descricao getDescricao() {
+    public Descricao getDescricao() {
         return descricao;
     }
 
@@ -57,7 +57,7 @@ public class malote {
         this.id = id;
     }
 
-    public void setFuncionario(funcionario funcionario) {
+    public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
     }
 
@@ -73,7 +73,7 @@ public class malote {
         this.situacaoMalote = situacaoMalote;
     }
 
-    public void setDescricao(descricao descricao) {
+    public void setDescricao(Descricao descricao) {
         this.descricao = descricao;
     }
 }

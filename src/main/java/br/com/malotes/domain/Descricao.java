@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "SUPDESCRICAO")
-public class descricao {
+public class Descricao {
 
     @Id
     @Column(name = "SEQCODDESCRICAO")

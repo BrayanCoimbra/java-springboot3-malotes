@@ -6,12 +6,12 @@ import java.time.LocalDate;
 
 public class ConsultaMaloteDTO {
     private String nomeFuncionario;
-    private String matricula;
+    private Integer matricula;
     private LocalDate dataEnvio;
     private String situacaoMalote;
     private String descricaoSituacao;
 
-    public ConsultaMaloteDTO(String nomeFuncionario, String matricula, LocalDate dataEnvio, String situacaoMalote, String descricaoSituacao) {
+    public ConsultaMaloteDTO(String nomeFuncionario, Integer matricula, LocalDate dataEnvio, String situacaoMalote, String descricaoSituacao) {
         this.nomeFuncionario = nomeFuncionario;
         this.matricula = matricula;
         this.dataEnvio = dataEnvio;
@@ -31,7 +31,7 @@ public class ConsultaMaloteDTO {
         return nomeFuncionario;
     }
 
-    public String getMatricula() {
+    public Integer getMatricula() {
         return matricula;
     }
 
