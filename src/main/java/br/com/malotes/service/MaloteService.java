@@ -15,24 +15,14 @@ public class MaloteService {
         this.maloteRepository = maloteRepository;
     }
 
-    public Page<ConsultaMaloteDTO> consultaMalote(
-            Integer matricula,
-            LocalDate dataEnvio,
-            String descricao,
-            Pageable pageable
-    ){
+    public Page<ConsultaMaloteDTO> consultaMalote(Integer matricula, LocalDate dataEnvio, String descricao, Pageable pageable){
         boolean temFiltro =
                 matricula != null ||
                 dataEnvio != null ||
                 (descricao != null && !descricao.isEmpty());
 
         if (temFiltro){
-            return maloteRepository.filtrarConsultaMalotes(
-                    matricula,
-                    dataEnvio,
-                    descricao,
-                    pageable
-            );
+            return maloteRepository.filtrarConsultaMalotes(matricula, dataEnvio, descricao, pageable);
         }
         return maloteRepository.listarConsultaMalotes(pageable);
     }

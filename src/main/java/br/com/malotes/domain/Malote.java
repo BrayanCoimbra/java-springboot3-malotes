@@ -1,5 +1,4 @@
 package br.com.malotes.domain;
-
 import jakarta.persistence.*;
 import java.time.LocalDate;
 

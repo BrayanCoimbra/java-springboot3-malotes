@@ -1,12 +1,10 @@
 package br.com.malotes.controller;
-
 import br.com.malotes.dto.ConsultaMaloteDTO;
 import br.com.malotes.service.MaloteService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 
 @RestController
@@ -28,11 +26,6 @@ public class MaloteController {
             @RequestParam(required = false) String descricao,
             Pageable pageable
     ) {
-        return maloteService.consultaMalote(
-                matricula,
-                dataEnvio,
-                descricao,
-                pageable
-        );
+        return maloteService.consultaMalote(matricula, dataEnvio, descricao, pageable);
     }
 }

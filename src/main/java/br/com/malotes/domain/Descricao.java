@@ -1,5 +1,4 @@
 package br.com.malotes.domain;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +11,13 @@ public class Descricao {
 
     @Column(name = "DESCRICAO", nullable = false)
     private String descricao;
+
+    public Descricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Descricao() {}
+
 
     // Getters and Setters
     public Long getId() {

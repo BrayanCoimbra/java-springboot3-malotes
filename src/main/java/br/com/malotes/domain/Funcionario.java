@@ -1,5 +1,4 @@
 package br.com.malotes.domain;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,6 +21,13 @@ public class Funcionario {
 
     @Column(name = "DTNASC", nullable = false)
     private LocalDate dataNascimento;
+
+    public Funcionario(String nome, Integer matricula) {
+        this.nome = nome;
+        this.matricula = matricula;
+    }
+
+    public Funcionario() {}
 
     // Getters and Setters
     public String getNome() {
