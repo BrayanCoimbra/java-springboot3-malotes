@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface DescricaoRepository extends JpaRepository<Descricao, Long> {
 
-    Optional<Descricao> findByDescricao(String descricao);
+    Optional<Descricao> findById(Long id);
 
 }

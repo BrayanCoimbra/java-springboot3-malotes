@@ -1,4 +1,5 @@
 package br.com.malotes.repository;
+import br.com.malotes.domain.Descricao;
 import br.com.malotes.dto.ConsultaMaloteDTO;
 import br.com.malotes.domain.Malote;
 import org.springframework.data.domain.Page;
@@ -7,8 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface MaloteRepository extends JpaRepository<Malote, Long> {
+
+    Optional<Malote> findById(Long id);
 
     @Query("""
             SELECT new br.com.malotes.dto.ConsultaMaloteDTO(

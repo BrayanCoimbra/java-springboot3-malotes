@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/malotes")
 public class MaloteController {

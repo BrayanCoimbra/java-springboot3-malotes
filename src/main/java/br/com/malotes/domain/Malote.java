@@ -7,6 +7,12 @@ import java.time.LocalDate;
 public class Malote {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "supmalote_seq_gen")
+    @SequenceGenerator(
+            name = "supmalote_seq_gen",
+            sequenceName = "SEQ_SUPMALOTE",
+            allocationSize = 1
+    )
     @Column(name = "SEQCODMALOTE")
     private Long id;
 

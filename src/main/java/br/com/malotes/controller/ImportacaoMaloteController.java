@@ -17,8 +17,12 @@ public class ImportacaoMaloteController {
     // Endpoint para iniciar a importação da planilha
     @PostMapping("/malotes")
     public String importarMalotes() throws IOException {
-        //System.out.println("para aqui irmao");
-        service.importarDados();
+        try {
+            service.importarDados();
+
+        }catch (Exception e) {
+            return "Erro ao realizar importação!" + e.getMessage();
+        }
         return "Importação realizada com sucesso!";
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 public class Descricao {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQCODDESCRICAO")
     private Long id;
 
@@ -17,7 +18,6 @@ public class Descricao {
     }
 
     public Descricao() {}
-
 
     // Getters and Setters
     public Long getId() {

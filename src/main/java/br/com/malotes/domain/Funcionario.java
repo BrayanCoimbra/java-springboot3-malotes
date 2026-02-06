@@ -1,8 +1,5 @@
 package br.com.malotes.domain;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -10,11 +7,12 @@ import java.time.LocalDate;
 @Table(name = "SUPFUNCIONARIO")
 public class Funcionario {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "SEQCODFUNCIONARIO")
     private Long id;
 
     @Column(name = "MATRICULA", nullable = false)
-    private int matricula;
+    private Integer matricula;
 
     @Column(name = "NOME", nullable = false)
     private String nome;
@@ -34,7 +32,7 @@ public class Funcionario {
         return nome;
     }
 
-    public int getMatricula() {
+    public Integer getMatricula() {
         return matricula;
     }
 
@@ -58,7 +56,7 @@ public class Funcionario {
         this.nome = nome;
     }
 
-    public void setMatricula(int matricula) {
+    public void setMatricula(Integer matricula) {
         this.matricula = matricula;
     }
 }
