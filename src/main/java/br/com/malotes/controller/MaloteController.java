@@ -1,6 +1,7 @@
 package br.com.malotes.controller;
 import br.com.malotes.dto.ConsultaMaloteDTO;
 import br.com.malotes.service.MaloteService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,14 +10,11 @@ import java.time.LocalDate;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
-@RequestMapping("/malotes")
+@RequestMapping("/consultarMalotes")
 public class MaloteController {
 
-    private final MaloteService maloteService;
-
-    public MaloteController(MaloteService maloteService) {
-        this.maloteService = maloteService;
-    }
+    @Autowired
+    private MaloteService maloteService;
 
     @GetMapping
     public Page<ConsultaMaloteDTO> listarMalotes(

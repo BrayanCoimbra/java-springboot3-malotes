@@ -12,6 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class ImportacaoMaloteService {
@@ -31,30 +32,32 @@ public class ImportacaoMaloteService {
     public void importarDados() throws IOException {
 
         try (InputStream is = new ClassPathResource("Controle_Malotes.xlsx").getInputStream();
-             Workbook workbook = new XSSFWorkbook(is)) {
+             Workbook planilhaControleMalotes = new XSSFWorkbook(is)) {
 
             DataFormatter formatter = new DataFormatter();
 
-            for (Sheet sheet : workbook) {
+            for (Sheet aba : planilhaControleMalotes) {
 
-                System.out.println("Aba: " + sheet.getSheetName());
+                String abaAtual = aba.getSheetName();
 
-                for (Row row : sheet) {
+                System.out.println("Aba: " + abaAtual);
 
-                    if (IgnorarLinha(row)) continue;
+                for (Row linha : aba) {
 
-                    switch (sheet.getSheetName()) {
+                    if (IgnorarLinha(linha)) continue;
+
+                    switch (abaAtual) {
 
                         case "Funcionarios":
-                            importarFuncionario(row, formatter);
+                            importarFuncionario(linha, formatter);
                             break;
 
                         case "Descricao Situacao":
-                            importarDescricao(row, formatter);
+                            importarDescricao(linha, formatter);
                             break;
 
                         case "Malotes":
-                            importarMalote(row, formatter);
+                            importarMalote(linha, formatter);
                             break;
                     }
                 }
@@ -104,51 +107,73 @@ public class ImportacaoMaloteService {
 
     private void importarMalote(Row row, DataFormatter formatter) {
 
-        Long intCodIdMalote = Long.parseLong(formatter.formatCellValue(row.getCell(0)).trim());//Codigo da Matricula do Funcionario
-        Integer intMatricula = Integer.parseInt(formatter.formatCellValue(row.getCell(1)).trim()); //Codigo da Matricula do Funcionario
+        //Codigo ID do registro
+        Long lngCodIdMalote = null;
+        Cell cellCodIdMalote = row.getCell(0);
 
-        LocalDate locDatDataEnvio = null;
-        Cell c2 = row.getCell(2);
-        if (c2 != null && c2.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(c2)) {
-            locDatDataEnvio = c2.getLocalDateTimeCellValue().toLocalDate(); //Data de Envio do malote
+        if (cellCodIdMalote != null && cellCodIdMalote.getCellType() == CellType.NUMERIC) {
+            lngCodIdMalote = Long.parseLong(formatter.formatCellValue(row.getCell(0)).trim());
         }
 
-        LocalDate locDatDataConferencia = null;
-        Cell c3 = row.getCell(3);
-        if (c3 != null && c3.getCellType() == CellType.NUMERIC && DateUtil.isCellDateFormatted(c3)) {
-            locDatDataConferencia = c3.getLocalDateTimeCellValue().toLocalDate(); //Data de conferencia do malote
+        //Codigo da Matricula do Funcionario
+        Integer intMatricula = null;
+        Cell cellMatricula  = row.getCell(1);
+
+        if (cellMatricula != null && cellMatricula.getCellType() == CellType.NUMERIC) {
+            intMatricula = Integer.parseInt(formatter.formatCellValue(row.getCell(1)).trim());
         }
 
-        String strSituacaoMalote = formatter.formatCellValue(row.getCell(4)); //Codigo da Situacao do Malote
+        //Data de Envio do Malote
+        LocalDate locDatDataEnvio = LocalDate.now();
+        Cell cellDataDeEnvioDoMalote = row.getCell(2);
 
-        String descStr = formatter.formatCellValue(row.getCell(5)).trim();
-        Long intCodDescricao = descStr.isEmpty() ? null : Long.parseLong(descStr); //Codigo da Descricao da Situacao
+        if (cellDataDeEnvioDoMalote.getCellType() == CellType.NUMERIC) {
+            locDatDataEnvio = cellDataDeEnvioDoMalote
+                    .getLocalDateTimeCellValue()
+                    .toLocalDate();
+        }
 
-        if (intCodDescricao == null) {
-            System.out.println("Linha " + row.getRowNum() + " ignorada: Código da descrição vazio");
-            intCodDescricao = 6L; //Situação desconhecida
+        //Data de Conferencia do Malote
+        LocalDate locDatDataConferencia = LocalDate.now();
+        Cell cellDataDeConferenciaDoMalote = row.getCell(3);
+
+        if (cellDataDeConferenciaDoMalote.getCellType() == CellType.NUMERIC) {
+            locDatDataConferencia = cellDataDeConferenciaDoMalote
+                    .getLocalDateTimeCellValue()
+                    .toLocalDate();
+        }
+
+        //Situacao do Malote
+        String strSituacaoMalote = formatter.formatCellValue(row.getCell(4));
+
+        //Descricao da situacao do malote
+        String strDesc = formatter.formatCellValue(row.getCell(5)).trim();
+
+        //Codigo da Descricao da Situacao
+        Long lngCodDescricao = strDesc.isEmpty() ? null : Long.parseLong(strDesc);
+
+        if (lngCodDescricao == null) {
+            //Posteriormente deve-se tratar a excpetion corretamente
+            lngCodDescricao = 6L; //Situação desconhecida
             strSituacaoMalote = "Desconhecido";
-            //return;
+            System.out.println("Linha " + row.getRowNum() + " ignorada: Código da descrição vazio. Situação do malote: " + strSituacaoMalote);
         }
 
-        Funcionario funcionario = funcionarioRepository.findByMatricula(intMatricula).orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+        //Para importar um malote, um funcionario e uma descriçao devem existir
+        //caso contrário, a importação do malote é ignorada
 
-        Descricao descricao = descricaoRepository.findById(intCodDescricao).orElseThrow(() -> new RuntimeException("Descrição não encontrada"));
+        Funcionario funcionario = funcionarioRepository
+                .findByMatricula(intMatricula)
+                    .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
 
-        Malote malote = maloteRepository.findById(intCodIdMalote).orElseGet(() -> new Malote());
+        Descricao descricao = descricaoRepository
+                .findById(lngCodDescricao)
+                .orElseGet(() -> descricaoRepository.findById(6L) //Descrição para situação desconhecida
+                        .orElseThrow(() -> new RuntimeException("Nenhuma descricao encontrada")));
 
-        if (locDatDataEnvio == null) {
-            locDatDataEnvio = LocalDate.now();
-        }
-
-        if (locDatDataConferencia == null) {
-            locDatDataConferencia = LocalDate.now();
-        }
-
-        if (intCodDescricao == null) {
-            intCodDescricao = 6L; //Situação desconhecida
-            strSituacaoMalote = "Desconhecido";
-        }
+        //Se o codigo do malote ja existir, ele sera atualizado
+        //caso contrario, um novo registro sera criado
+        Malote malote = maloteRepository.findById(lngCodIdMalote).orElseGet(() -> new Malote());
 
         malote.setFuncionario(funcionario);
         malote.setDataEnvio(locDatDataEnvio);
@@ -156,20 +181,16 @@ public class ImportacaoMaloteService {
         malote.setSituacaoMalote(strSituacaoMalote);
         malote.setDescricao(descricao);
 
-        if (locDatDataEnvio == null) {
-            System.out.println("Linha " + row.getRowNum() + " ignorada: Data de envio vazia");
-            return;
-        }
-
         maloteRepository.save(malote);
     }
 
+    //Helper para verificar se a linha deve ser ignorada (linha vazia ou cabecalho iodentificador das informacoes)
     private boolean IgnorarLinha(Row row) {
 
         // linha inexistente
         if (row == null) return true;
 
-        // cabeçalho
+        // cabecalho
         if (row.getRowNum() == 0) return true;
 
         // verifica se todas as células estão vazias

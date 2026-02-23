@@ -1,5 +1,4 @@
 package br.com.malotes.repository;
-import br.com.malotes.domain.Descricao;
 import br.com.malotes.dto.ConsultaMaloteDTO;
 import br.com.malotes.domain.Malote;
 import org.springframework.data.domain.Page;
